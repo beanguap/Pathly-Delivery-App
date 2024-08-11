@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import MapView from '../../components/MapView/MapView';
-import './pages/Home/homepage.css'
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Calendar } from 'lucide-react';
+import './homepage.css';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { Calendar as CalendarIcon } from 'lucide-react';
 
 function HomePage() {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -22,10 +22,10 @@ function HomePage() {
         <div className="section calendar">
           <h2 className="text-lg font-semibold mb-2">Calendar</h2>
           <div className="flex items-center">
-            <Calendar className="mr-2" size={20} />
-            <DatePicker
-              selected={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
+            <CalendarIcon className="mr-2" size={20} />
+            <Calendar
+              onChange={setSelectedDate}
+              value={selectedDate}
               className="p-2 border rounded"
             />
           </div>
