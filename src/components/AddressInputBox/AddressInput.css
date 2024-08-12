@@ -1,0 +1,35 @@
+/* src/components/AddressInputBox.css */
+
+.address-input-box {
+    position: absolute;
+    bottom: 80px; /* Positioned above the button */
+    right: 20px;
+    width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+  }
+  
+  .box-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .box-content input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .box-content button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
