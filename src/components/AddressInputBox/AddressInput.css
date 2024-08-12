@@ -1,9 +1,8 @@
 /* src/components/AddressInputBox.css */
-
 .address-input-box {
     position: absolute;
-    bottom: 80px; /* Positioned above the button */
-    right: 20px;
+    bottom: 150px; /* Increased to move it above the button */
+    right: 700px;
     width: 300px;
     padding: 20px;
     border-radius: 8px;
@@ -25,11 +24,10 @@
   }
   
   .box-content button {
-    padding: 10px;
+    padding: 5px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
-  
