@@ -24,13 +24,10 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    // Simple validation example
     if (!/^\d{5}(-\d{4})?$/.test(addressData.zipCode)) {
       alert("Please enter a valid ZIP/Postal Code.");
       return;
     }
-  
     onAddressSubmit(addressData);
     setAddressData({
       name: '',
@@ -41,7 +38,7 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       country: '',
     });
   };
-  
+
   return (
     <div className="address-input-box" role="dialog" aria-labelledby="addressInputForm">
       <div className="box-content">
@@ -106,7 +103,7 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       </div>
     </div>
   );
-}  
+}
 
 AddressInputBox.propTypes = {
   isVisible: PropTypes.bool.isRequired,
