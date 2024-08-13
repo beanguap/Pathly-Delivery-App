@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MapView from '../../components/MapView/MapView';
-import AddressInputBox from '../../components/AddressInputBox/AddressInput';
+import AddressInputBox from '../../components/AddressInputBox/AddressInputBox';
 import RouteList from '../../components/RouteList/RouteList';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
