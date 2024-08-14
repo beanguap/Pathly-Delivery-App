@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import axios from 'axios';
 import MapView from '../../components/MapView/MapView';
 import AddressInputBox from '../../components/AddressInputBox/AddressInputBox';
@@ -7,6 +7,11 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import InventoryTracker from '../../components/InventoryTracker.js/InventoryTracker';
 import './homepage.css';
+
+const API_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
+const API_HEADERS = {
+  'User-Agent': 'YourAppName/1.0'
+};
 
 function HomePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -28,12 +33,8 @@ function HomePage() {
       const query = `${street}, ${city}, ${state} ${zipCode}, ${country}`;
       const encodedQuery = encodeURIComponent(query);
       const response = await axios.get(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodedQuery}`,
-        {
-          headers: {
-            'User-Agent': 'YourAppName/1.0'
-          }
-        }
+        `${API_ENDPOINT}?format=json&q=${encodedQuery}`,
+        { headers: API_HEADERS }
       );
 
       if (response.data && response.data.length > 0) {
@@ -50,11 +51,23 @@ function HomePage() {
       }
     } catch (error) {
       console.error("Error geocoding address:", error);
-      alert("An error occurred while processing your request. Please try again.");
+      if (error.response) {
+        alert(`Error: ${error.response.data.message || 'Server responded with an error'}`);
+      } else if (error.request) {
+        alert('No response from server. Please check your connection.');
+      } else {
+        alert('An error occurred. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Memoize the routes for performance
+  const memoizedRoutes = useMemo(() => routes.map(route => ({
+    position: [route.latitude, route.longitude],
+    popup: `${route.name}, ${route.street}, ${route.city}, ${route.state} ${route.zipCode}`
+  })), [routes]);
 
   return (
     <div className="homepage">
@@ -82,12 +95,16 @@ function HomePage() {
         <MapView
           center={currentLocation}
           zoom={13}
-          markers={routes.map(route => ({
-            position: [route.latitude, route.longitude],
-            popup: `${route.name}, ${route.street}, ${route.city}, ${route.state} ${route.zipCode}`
-          }))}
+          markers={memoizedRoutes}
         />
-        <button className="add-route-btn" onClick={toggleInputBox} disabled={isSubmitting}>+</button>
+        <button 
+          className="add-route-btn" 
+          onClick={toggleInputBox} 
+          disabled={isSubmitting} 
+          aria-label="Add new route"
+        >
+          +
+        </button>
         {isInputBoxVisible && (
           <AddressInputBox
             isVisible={isInputBoxVisible}
