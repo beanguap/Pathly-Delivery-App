@@ -5,25 +5,24 @@ import AddressInputBox from '../../components/AddressInputBox/AddressInputBox';
 import RouteList from '../../components/RouteList/RouteList';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import InventoryTracker from '../../components/InventoryTracker.js/InventoryTracker';
 import './homepage.css';
 
 function HomePage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isInputBoxVisible, setInputBoxVisible] = useState(false);
   const [routes, setRoutes] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);  // New state for submission status
-  const [currentLocation] = useState([25.7617, -80.1918]); // Miami coordinates as default
-  const [inventory, setInventory] = useState([]);  // State for inventory tracking
-  const [newInventoryItem, setNewInventoryItem] = useState('');  // State for new inventory item input
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentLocation] = useState([25.7617, -80.1918]);
 
   const toggleInputBox = () => {
     setInputBoxVisible(!isInputBoxVisible);
   };
 
   const handleAddressSubmit = async (addressData) => {
-    if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting) return;
 
-    setIsSubmitting(true);  // Set submitting status to true
+    setIsSubmitting(true);
     try {
       const { street, city, state, zipCode, country } = addressData;
       const query = `${street}, ${city}, ${state} ${zipCode}, ${country}`;
@@ -32,7 +31,7 @@ function HomePage() {
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodedQuery}`,
         {
           headers: {
-            'User-Agent': 'YourAppName/1.0' // Replace with your app name and version
+            'User-Agent': 'YourAppName/1.0'
           }
         }
       );
@@ -53,49 +52,8 @@ function HomePage() {
       console.error("Error geocoding address:", error);
       alert("An error occurred while processing your request. Please try again.");
     } finally {
-      setIsSubmitting(false);  // Reset submission status
+      setIsSubmitting(false);
     }
-  };
-
-  const handleInventorySubmit = (e) => {
-    e.preventDefault();
-    if (newInventoryItem.trim() === '') return;  // Prevent adding empty items
-
-    setInventory((prevInventory) => {
-      const existingItem = prevInventory.find(item => item.name === newInventoryItem.trim());
-
-      if (existingItem) {
-        // If item already exists, increment the quantity
-        return prevInventory.map(item =>
-          item.name === newInventoryItem.trim()
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      } else {
-        // If item does not exist, add it with quantity 1
-        return [...prevInventory, { name: newInventoryItem.trim(), quantity: 1 }];
-      }
-    });
-
-    setNewInventoryItem('');  // Reset input field
-  };
-
-  const incrementQuantity = (index) => {
-    setInventory((prevInventory) => {
-      const updatedInventory = [...prevInventory];
-      updatedInventory[index].quantity += 1;
-      return updatedInventory;
-    });
-  };
-
-  const decrementQuantity = (index) => {
-    setInventory((prevInventory) => {
-      const updatedInventory = [...prevInventory];
-      if (updatedInventory[index].quantity > 1) {
-        updatedInventory[index].quantity -= 1;
-      }
-      return updatedInventory;
-    });
   };
 
   return (
@@ -116,26 +74,8 @@ function HomePage() {
         <div className="section routes">
           <RouteList routes={routes} currentLocation={currentLocation} />
         </div>
-        <div className="section notes">
-          <h2>Inventory</h2>
-          <form onSubmit={handleInventorySubmit}>
-            <input
-              type="text"
-              placeholder="Add item to inventory..."
-              value={newInventoryItem}
-              onChange={(e) => setNewInventoryItem(e.target.value)}
-            />
-            <button type="submit">Add</button>
-          </form>
-          <ul>
-            {inventory.map((item, index) => (
-              <li key={index}>
-                {item.name} - Quantity: {item.quantity}
-                <button onClick={() => incrementQuantity(index)}>+</button>
-                <button onClick={() => decrementQuantity(index)}>-</button>
-              </li>
-            ))}
-          </ul>
+        <div className="section inventory-tracker">
+          <InventoryTracker />
         </div>
       </div>
       <div className="map-section">
@@ -153,7 +93,7 @@ function HomePage() {
             isVisible={isInputBoxVisible}
             onClose={() => setInputBoxVisible(false)}
             onAddressSubmit={handleAddressSubmit}
-            isSubmitting={isSubmitting} // Pass submission status to AddressInputBox
+            isSubmitting={isSubmitting}
           />
         )}
       </div>

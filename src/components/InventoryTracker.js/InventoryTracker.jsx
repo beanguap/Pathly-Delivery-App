@@ -1,46 +1,71 @@
 import { useState } from 'react';
-import './InventoryTracker.css';
+import './inventoryTracker.css'; // Assuming you have CSS for InventoryTracker
 
 function InventoryTracker() {
-  const [inventory, setInventory] = useState({});
-  const [itemTitle, setItemTitle] = useState('');
+  const [inventory, setInventory] = useState([]);
+  const [newInventoryItem, setNewInventoryItem] = useState('');
 
-  const addItem = () => {
-    if (itemTitle.trim()) {
-      setInventory(prev => ({ ...prev, [itemTitle]: 0 }));
-      setItemTitle('');
-    }
+  const handleInventorySubmit = (e) => {
+    e.preventDefault();
+    if (newInventoryItem.trim() === '') return;
+
+    setInventory((prevInventory) => {
+      const existingItem = prevInventory.find(item => item.name === newInventoryItem.trim());
+
+      if (existingItem) {
+        return prevInventory.map(item =>
+          item.name === newInventoryItem.trim()
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        return [...prevInventory, { name: newInventoryItem.trim(), quantity: 1 }];
+      }
+    });
+
+    setNewInventoryItem('');
   };
 
-  const incrementItem = (item) => {
-    setInventory(prev => ({ ...prev, [item]: prev[item] + 1 }));
+  const incrementQuantity = (index) => {
+    setInventory((prevInventory) => {
+      const updatedInventory = [...prevInventory];
+      updatedInventory[index].quantity += 1;
+      return updatedInventory;
+    });
   };
 
-  const decrementItem = (item) => {
-    setInventory(prev => ({
-      ...prev,
-      [item]: prev[item] > 0 ? prev[item] - 1 : 0
-    }));
+  const decrementQuantity = (index) => {
+    setInventory((prevInventory) => {
+      const updatedInventory = [...prevInventory];
+      if (updatedInventory[index].quantity > 1) {
+        updatedInventory[index].quantity -= 1;
+      }
+      return updatedInventory;
+    });
   };
 
   return (
     <div className="inventory-tracker">
-      <h2>Inventory Tracker</h2>
-      <div className="input-group">
+      <h2>Inventory</h2>
+      <form onSubmit={handleInventorySubmit} className="inventory-form">
         <input
           type="text"
-          placeholder="Item Title"
-          value={itemTitle}
-          onChange={(e) => setItemTitle(e.target.value)}
+          placeholder="Add item to inventory..."
+          value={newInventoryItem}
+          onChange={(e) => setNewInventoryItem(e.target.value)}
+          className="inventory-input"
         />
-        <button onClick={addItem}>Add Item</button>
-      </div>
+        <button type="submit" className="inventory-button">Add</button>
+      </form>
       <ul className="inventory-list">
-        {Object.keys(inventory).map(item => (
-          <li key={item}>
-            <span>{item}: {inventory[item]}</span>
-            <button onClick={() => incrementItem(item)}>+</button>
-            <button onClick={() => decrementItem(item)}>-</button>
+        {inventory.map((item, index) => (
+          <li key={index} className="inventory-item">
+            <span>{item.name} - Quantity:</span>
+            <div className="button-group">
+              <button onClick={() => decrementQuantity(index)} className="inventory-button decrement">-</button>
+              <span className="quantity-display">{item.quantity}</span>
+              <button onClick={() => incrementQuantity(index)} className="inventory-button">+</button>
+            </div>
           </li>
         ))}
       </ul>
