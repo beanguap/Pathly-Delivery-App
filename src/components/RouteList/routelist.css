@@ -1,13 +1,14 @@
 .route-list-container {
-  width: 100%;
-  max-width: 100%; /* Ensure it doesn't exceed its container */
+  width: 100%; /* Ensure the component fills its container */
+  max-width: 100%; /* Prevent the component from exceeding its container's width */
   padding: 20px;
-  box-sizing: border-box; /* Ensures padding is included within width */
-  background-color: #ffffff;
+  box-sizing: border-box; /* Ensures padding is included within the width */
+  background-color: #ffffff; /* Match the background color */
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow to match the Inventory component */
   overflow: hidden;
 }
+
 
 .route-list-container h3 {
   margin-top: 0;
@@ -20,7 +21,7 @@
   max-height: 400px;
   overflow-y: auto;
   padding-right: 10px;
-  margin-right: 0; /* Remove negative margin */
+  margin-right: 0; /* Ensures no negative margins to prevent overflow */
 }
 
 .route-item {
@@ -62,7 +63,7 @@
   background-color: #0056b3;
 }
 
-/* Customizing scrollbar for webkit browsers */
+/* Custom scrollbar styles for webkit browsers */
 .route-list::-webkit-scrollbar {
   width: 8px;
 }

@@ -24,7 +24,7 @@ const FullCalendarComponent = () => {
   };
 
   return (
-    <div className="h-[400px]">
+    <div className="h-[300px]">
       <Calendar
         localizer={localizer}
         events={events}
