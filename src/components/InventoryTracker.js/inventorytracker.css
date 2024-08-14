@@ -1,0 +1,104 @@
+.inventory-tracker {
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-group {
+    display: flex;
+    margin-bottom: 15px;
+  }
+  
+  .input-group input {
+    flex: 1;
+    padding: 10px 15px;
+    margin-right: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+  
+  .input-group input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .input-group button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .input-group button:hover {
+    background-color: #0056b3;
+  }
+  
+  .inventory-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .inventory-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .inventory-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .inventory-item {
+    font-size: 16px;
+    color: #333;
+    flex-grow: 1;
+  }
+  
+  .inventory-list button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .inventory-list button:hover {
+    background-color: #0056b3;
+  }
+  
+  .inventory-list button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .increment-btn,
+  .decrement-btn {
+    background-color: #28a745;
+  }
+  
+  .increment-btn:hover,
+  .decrement-btn:hover {
+    background-color: #218838;
+  }
+  
+  .decrement-btn {
+    background-color: #dc3545;
+  }
+  
+  .decrement-btn:hover {
+    background-color: #c82333;
+  }
+  
