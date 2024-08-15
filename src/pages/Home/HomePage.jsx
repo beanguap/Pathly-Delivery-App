@@ -5,7 +5,7 @@ import AddressInputBox from '../../components/AddressInputBox/AddressInputBox';
 import RouteList from '../../components/RouteList/RouteList';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import InventoryTracker from '../../components/InventoryTracker.js/InventoryTracker';
+import InventoryTracker from '../../components/InventoryTracker/InventoryTracker';
 import './homepage.css';
 
 const API_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
