@@ -10,6 +10,7 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
     state: '',
     zipCode: '',
     country: '',
+    fullAddress: '',
   });
 
   if (!isVisible) return null;
@@ -20,6 +21,38 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       ...prevData,
       [name]: value,
     }));
+    if (name === 'fullAddress') {
+      parseAddress(value);
+    }
+  };
+
+  const handleClear = (e) => {
+    const { name } = e.target;
+    setAddressData(prevData => ({
+      ...prevData,
+      [name]: '',
+    }));
+  };
+
+  const parseAddress = (fullAddress) => {
+    // Basic example - this needs to be adapted for more accurate parsing
+    const parts = fullAddress.split(',');
+    if (parts.length < 4) return;
+
+    const streetCityState = parts[0].trim();
+    const cityStateZip = parts[1].trim();
+    const country = parts[2].trim();
+    const zipCode = cityStateZip.split(' ')[1]?.trim() || '';
+
+    setAddressData({
+      ...addressData,
+      street: streetCityState,
+      city: cityStateZip.split(' ')[0]?.trim() || '',
+      state: cityStateZip.split(' ')[1]?.trim() || '',
+      zipCode: zipCode,
+      country: country,
+      fullAddress: fullAddress,
+    });
   };
 
   const handleSubmit = (e) => {
@@ -28,7 +61,14 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       alert("Please enter a valid ZIP/Postal Code.");
       return;
     }
-    onAddressSubmit(addressData);
+    onAddressSubmit({
+      name: addressData.name,
+      street: addressData.street,
+      city: addressData.city,
+      state: addressData.state,
+      zipCode: addressData.zipCode,
+      country: addressData.country,
+    });
     setAddressData({
       name: '',
       street: '',
@@ -36,6 +76,7 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       state: '',
       zipCode: '',
       country: '',
+      fullAddress: '',
     });
   };
 
@@ -44,66 +85,33 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       <div className="box-content">
         <button className="close-btn" onClick={onClose} aria-label="Close">Close</button>
         <form onSubmit={handleSubmit} id="addressInputForm">
-          <input
-            type="text"
-            name="name"
-            value={addressData.name}
-            onChange={handleChange}
-            placeholder="Full Name"
-            required
-            aria-label="Full Name"
-          />
-          <input
-            type="text"
-            name="street"
-            value={addressData.street}
-            onChange={handleChange}
-            placeholder="Street Address"
-            required
-            aria-label="Street Address"
-          />
-          <input
-            type="text"
-            name="city"
-            value={addressData.city}
-            onChange={handleChange}
-            placeholder="City"
-            required
-            aria-label="City"
-          />
-          <input
-            type="text"
-            name="state"
-            value={addressData.state}
-            onChange={handleChange}
-            placeholder="State/Province"
-            required
-            aria-label="State/Province"
-          />
-          <input
-            type="text"
-            name="zipCode"
-            value={addressData.zipCode}
-            onChange={handleChange}
-            placeholder="ZIP/Postal Code"
-            required
-            aria-label="ZIP/Postal Code"
-          />
-          <input
-            type="text"
-            name="country"
-            value={addressData.country}
-            onChange={handleChange}
-            placeholder="Country"
-            required
-            aria-label="Country"
-          />
+          {['fullAddress', 'name', 'street', 'city', 'state', 'zipCode', 'country'].map(field => (
+            <div key={field} className="input-container">
+              <input
+                type="text"
+                name={field}
+                value={addressData[field]}
+                onChange={handleChange}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                aria-label={field.charAt(0).toUpperCase() + field.slice(1)}
+              />
+              <button
+                type="button"
+                className="clear-btn"
+                name={field}
+                onClick={handleClear}
+                aria-label={`Clear ${field}`}
+              >
+                ×
+              </button>
+            </div>
+          ))}
           <button type="submit" aria-label="Submit Address">Submit</button>
         </form>
       </div>
     </div>
   );
-}
+};
 
 AddressInputBox.propTypes = {
   isVisible: PropTypes.bool.isRequired,

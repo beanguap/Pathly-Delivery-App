@@ -1,0 +1,60 @@
+.route-manager {
+    padding: 16px;
+  }
+  
+  .add-route-button {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  
+  .add-route-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .routes-section {
+    margin-top: 16px;
+  }
+  
+  .routes-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .no-routes-message {
+    color: #888;
+  }
+  
+  .routes-list {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .route-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .delete-route-button {
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+  
+  .delete-route-button:hover {
+    background-color: #c82333;
+  }
+  
