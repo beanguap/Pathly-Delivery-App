@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 import MapView from '../../components/MapView/MapView';
 import AddressInputBox from '../../components/AddressInputBox/AddressInputBox';
@@ -19,6 +19,9 @@ function HomePage() {
   const [routes, setRoutes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentLocation] = useState([25.7617, -80.1918]);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const mapRef = useRef(null);
 
   const toggleInputBox = () => {
     setInputBoxVisible(!isInputBoxVisible);
@@ -69,6 +72,44 @@ function HomePage() {
     popup: `${route.name}, ${route.street}, ${route.city}, ${route.state} ${route.zipCode}`
   })), [routes]);
 
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setDragging(true);
+    mapRef.current.startX = e.clientX;
+    mapRef.current.startY = e.clientY;
+    mapRef.current.startLeft = position.x;
+    mapRef.current.startTop = position.y;
+  };
+
+  const handleMouseMove = useCallback((e) => {
+    if (!dragging) return;
+    const dx = e.clientX - mapRef.current.startX;
+    const dy = e.clientY - mapRef.current.startY;
+    setPosition({
+      x: mapRef.current.startLeft + dx,
+      y: mapRef.current.startTop + dy
+    });
+  }, [dragging]);
+
+  const handleMouseUp = () => {
+    setDragging(false);
+  };
+
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [dragging, handleMouseMove]);
+
   return (
     <div className="homepage">
       <div className="top-bar">
@@ -91,12 +132,18 @@ function HomePage() {
           <InventoryTracker />
         </div>
       </div>
-      <div className="map-section">
+      <div
+        className="map-section"
+        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
+        ref={mapRef}
+      >
         <MapView
           center={currentLocation}
           zoom={13}
           markers={memoizedRoutes}
         />
+        <div className="drag-handle" onMouseDown={handleMouseDown}></div>
+        <div className="resize-handle"></div>
         <button 
           className="add-route-btn" 
           onClick={toggleInputBox} 
