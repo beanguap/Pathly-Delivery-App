@@ -5,6 +5,7 @@ import './routelist.css';
 function RouteList({ routes, currentLocation, onDelete }) {
   const [sortOrder, setSortOrder] = useState('asc');
   const [swipedRouteId, setSwipedRouteId] = useState(null);
+  const [initialX, setInitialX] = useState(null);
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2));
@@ -22,22 +23,23 @@ function RouteList({ routes, currentLocation, onDelete }) {
     setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  const handleTouchStart = (routeId, e) => {
+  const handleDragStart = (routeId, e) => {
     setSwipedRouteId(routeId);
+    setInitialX(e.type === 'mousedown' ? e.clientX : e.touches[0].clientX);
     e.currentTarget.style.transition = ''; // Reset transition to allow smooth dragging
   };
 
-  const handleTouchMove = (routeId, e) => {
+  const handleDragMove = (routeId, e) => {
     if (swipedRouteId !== routeId) return;
-    const touch = e.touches[0];
-    const movementX = touch.clientX - e.currentTarget.getBoundingClientRect().left;
+    const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+    const movementX = clientX - initialX;
 
     if (movementX < 0) {
       e.currentTarget.style.transform = `translateX(${movementX}px)`;
     }
   };
 
-  const handleTouchEnd = (routeId, e) => {
+  const handleDragEnd = (routeId, e) => {
     const touchElement = e.currentTarget;
     const movementX = parseFloat(touchElement.style.transform.slice(11, -3));
     const threshold = -touchElement.offsetWidth / 3;
@@ -53,6 +55,7 @@ function RouteList({ routes, currentLocation, onDelete }) {
     }
 
     setSwipedRouteId(null);
+    setInitialX(null);
   };
 
   return (
@@ -66,9 +69,12 @@ function RouteList({ routes, currentLocation, onDelete }) {
           <div
             key={index}
             className="route-item-wrapper"
-            onTouchStart={(e) => handleTouchStart(route.id, e)}
-            onTouchMove={(e) => handleTouchMove(route.id, e)}
-            onTouchEnd={(e) => handleTouchEnd(route.id, e)}
+            onTouchStart={(e) => handleDragStart(route.id, e)}
+            onTouchMove={(e) => handleDragMove(route.id, e)}
+            onTouchEnd={(e) => handleDragEnd(route.id, e)}
+            onMouseDown={(e) => handleDragStart(route.id, e)}
+            onMouseMove={(e) => handleDragMove(route.id, e)}
+            onMouseUp={(e) => handleDragEnd(route.id, e)}
           >
             <div className="route-item">
               <p>{route.name}</p>

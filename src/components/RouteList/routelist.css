@@ -1,26 +1,27 @@
-.route-list-container {
-  width: 100%;
-  max-width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.route-list-container h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-  color: #333;
-}
-
 .route-list {
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 10px;
-  margin-right: 0;
+  height: 400px; /* Fixed height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-right: 10px; /* Add padding to the right to make space for the scrollbar */
+  box-sizing: content-box; /* Ensure padding is not included in the width calculation */
+}
+
+/* The scrollbar styles for webkit browsers */
+.route-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.route-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.route-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.route-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .route-item-wrapper {
@@ -28,6 +29,7 @@
   overflow: hidden;
   transition: transform 0.3s ease;
   margin-bottom: 10px;
+  cursor: grab; /* Cursor change for better indication */
 }
 
 .route-item {
@@ -35,10 +37,27 @@
   border-radius: 8px;
   padding: 15px;
   transition: transform 0.3s ease;
+  position: relative;
 }
 
 .route-item:hover {
   background-color: #e9ecef;
+}
+
+.route-item::after {
+  content: "≡";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: #adb5bd;
+  transition: color 0.3s ease;
+  cursor: grab;
+}
+
+.route-item:hover::after {
+  color: #495057; /* Darker color to indicate interactivity */
 }
 
 .route-item p {
@@ -85,23 +104,4 @@
 
 .sort-button:hover {
   background-color: #0056b3;
-}
-
-/* Custom scrollbar styles for webkit browsers */
-.route-list::-webkit-scrollbar {
-  width: 8px;
-}
-
-.route-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.route-list::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.route-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }

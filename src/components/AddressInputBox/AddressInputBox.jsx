@@ -13,6 +13,8 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
     fullAddress: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
   if (!isVisible) return null;
 
   const handleChange = (e) => {
@@ -35,7 +37,6 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
   };
 
   const parseAddress = (fullAddress) => {
-    // Basic example - this needs to be adapted for more accurate parsing
     const parts = fullAddress.split(',');
     if (parts.length < 4) return;
 
@@ -61,23 +62,27 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       alert("Please enter a valid ZIP/Postal Code.");
       return;
     }
-    onAddressSubmit({
-      name: addressData.name,
-      street: addressData.street,
-      city: addressData.city,
-      state: addressData.state,
-      zipCode: addressData.zipCode,
-      country: addressData.country,
-    });
-    setAddressData({
-      name: '',
-      street: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: '',
-      fullAddress: '',
-    });
+    setLoading(true);
+    setTimeout(() => {
+      onAddressSubmit({
+        name: addressData.name,
+        street: addressData.street,
+        city: addressData.city,
+        state: addressData.state,
+        zipCode: addressData.zipCode,
+        country: addressData.country,
+      });
+      setLoading(false);
+      setAddressData({
+        name: '',
+        street: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: '',
+        fullAddress: '',
+      });
+    }, 150); // Simulate delay
   };
 
   return (
@@ -85,6 +90,7 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
       <div className="box-content">
         <button className="close-btn" onClick={onClose} aria-label="Close">Close</button>
         <form onSubmit={handleSubmit} id="addressInputForm">
+          {loading && <div className="loader"></div>}
           {['fullAddress', 'name', 'street', 'city', 'state', 'zipCode', 'country'].map(field => (
             <div key={field} className="input-container">
               <input
@@ -94,6 +100,7 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
                 onChange={handleChange}
                 placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                 aria-label={field.charAt(0).toUpperCase() + field.slice(1)}
+                disabled={loading}
               />
               <button
                 type="button"
@@ -101,12 +108,15 @@ const AddressInputBox = ({ isVisible, onClose, onAddressSubmit }) => {
                 name={field}
                 onClick={handleClear}
                 aria-label={`Clear ${field}`}
+                disabled={loading}
               >
                 ×
               </button>
             </div>
           ))}
-          <button type="submit" aria-label="Submit Address">Submit</button>
+          <button type="submit" aria-label="Submit Address" disabled={loading}>
+            {loading ? 'Loading...' : 'Add'}
+          </button>
         </form>
       </div>
     </div>

@@ -17,7 +17,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 function MapView({ center, zoom, markers }) {
   return (
-    <div style={{ height: '800px', width: '100%' }}> {/* Define size */}
+    <div style={{ height: '650px', width: '100%' }}> {/* Define size */}
       <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
