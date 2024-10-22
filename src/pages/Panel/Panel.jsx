@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import HomePage from '../Home/HomePage';
 import InventoryPage from '../InventoryPage';
 import './Panel.css';
@@ -28,6 +28,14 @@ function Panel() {
         <CurrentPage />
       </div>
       <button className="arrow right" onClick={goToNextPage}>&gt;</button>
+      <div className="indicators">
+        {pages.map((page, index) => (
+          <span
+            key={index}
+            className={`indicator ${index === currentPageIndex ? 'active' : ''}`}
+          ></span>
+        ))}
+      </div>
     </div>
   );
 }
