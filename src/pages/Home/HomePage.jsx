@@ -66,6 +66,10 @@ function HomePage() {
     }
   };
 
+  const handleDeleteRoute = (routeId) => {
+    setRoutes(prevRoutes => prevRoutes.filter(route => route.id !== routeId));
+  };
+
   // Memoize the routes for performance
   const memoizedRoutes = useMemo(() => routes.map(route => ({
     position: [route.latitude, route.longitude],
@@ -126,7 +130,7 @@ function HomePage() {
           />
         </div>
         <div className="section routes">
-          <RouteList routes={routes} currentLocation={currentLocation} />
+          <RouteList routes={routes} currentLocation={currentLocation} onDelete={handleDeleteRoute} />
         </div>
         <div className="section inventory-tracker">
           <InventoryTracker />
