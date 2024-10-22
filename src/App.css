@@ -7,13 +7,22 @@
 
   /*========== Colors ==========*/
   /*Color mode HSL(hue, saturation, lightness)*/
-  --hue: 0;
-  --sat: 0%;
-  --title-color: hsl(var(--hue), var(--sat), 20%);
-  --title-color-dark: hsl(var(--hue), var(--sat), 0%);
-  --text-color: hsl(var(--hue), var(--sat), 46%);
-  --body-color: hsl(var(--hue), var(--sat), 98%);
-  --container-color: #f5F4F6;
+  --primary-hue: 210;  /* Blue-based theme */
+  --primary-sat: 90%;
+  --primary-color: hsl(var(--primary-hue), var(--primary-sat), 50%);
+  --primary-color-light: hsl(var(--primary-hue), var(--primary-sat), 65%);
+  --primary-color-dark: hsl(var(--primary-hue), var(--primary-sat), 35%);
+  
+  --title-color: hsl(var(--primary-hue), 15%, 20%);
+  --title-color-dark: hsl(var(--primary-hue), 15%, 0%);
+  --text-color: hsl(var(--primary-hue), 15%, 35%);
+  --body-color: hsl(var(--primary-hue), 15%, 98%);
+  --container-color: #FFFFFF;
+  
+  /* Status Colors */
+  --success-color: hsl(160, 84%, 39%);
+  --warning-color: hsl(45, 93%, 47%);
+  --error-color: hsl(0, 79%, 63%);
 
   /*========== Font and typography ==========*/
   --body-font: "Poppins", sans-serif;
@@ -34,7 +43,6 @@
   --font-semi-bold: 600;
 
   /*========== Margins Bottom ==========*/
-  /*.5rem = 8px | 1rem = 16px ...*/
   --mb-0-25: 0.25rem;
   --mb-0-5: 0.5rem;
   --mb-0-75: 0.75rem;
@@ -48,6 +56,14 @@
   --z-tooltip: 10;
   --z-fixed: 100;
   --z-modal: 1000;
+
+  /*========== Transitions ==========*/
+  --transition-speed: 0.3s;
+  
+  /*========== Border Radius ==========*/
+  --border-radius-sm: 0.25rem;
+  --border-radius: 0.5rem;
+  --border-radius-lg: 1rem;
 }
 
 /* Responsive typography */
@@ -72,6 +88,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body,
@@ -85,13 +103,13 @@ textarea {
 body {
   background-color: var(--body-color);
   color: var(--text-color);
+  line-height: 1.6;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   color: var(--title-color);
   font-weight: var(--font-semi-bold);
+  line-height: 1.2;
 }
 
 ul {
@@ -100,6 +118,12 @@ ul {
 
 a {
   text-decoration: none;
+  color: var(--primary-color);
+  transition: color var(--transition-speed) ease;
+}
+
+a:hover {
+  color: var(--primary-color-dark);
 }
 
 button {
@@ -111,6 +135,7 @@ button {
 img {
   max-width: 100%;
   height: auto;
+  display: block;
 }
 
 /*=============== REUSABLE CSS CLASSES ===============*/
@@ -121,12 +146,14 @@ img {
 .section__title {
   font-size: var(--h1-font-size);
   color: var(--title-color);
+  margin-bottom: var(--mb-2);
 }
 
 .section__subtitle {
   display: block;
   font-size: var(--small-font-size);
   margin-bottom: 4rem;
+  color: var(--text-color);
 }
 
 .section__title,
@@ -139,6 +166,8 @@ img {
   max-width: 968px;
   margin-left: auto;
   margin-right: auto;
+  padding-left: var(--mb-1-5);
+  padding-right: var(--mb-1-5);
 }
 
 .grid {
@@ -149,25 +178,34 @@ img {
 /*=============== BUTTONS ===============*/
 .button {
   display: inline-block;
-  background-color: var(--title-color);
+  background-color: var(--primary-color);
   color: var(--container-color);
   padding: 1.25rem 2rem;
-  border-radius: 1rem;
+  border-radius: var(--border-radius);
   font-weight: var(--font-medium);
+  transition: background-color var(--transition-speed) ease;
 }
 
 .button:hover {
-  background-color: var(--title-color-dark);
+  background-color: var(--primary-color-dark);
 }
 
 .button__icon {
   margin-left: var(--mb-0-5);
+  transition: transform var(--transition-speed) ease;
 }
 
 .button--flex {
   display: inline-flex;
   align-items: center;
+  gap: var(--mb-0-5);
 }
+
+/*=============== UTILITY CLASSES ===============*/
+.text-center { text-align: center; }
+.text-success { color: var(--success-color); }
+.text-warning { color: var(--warning-color); }
+.text-error { color: var(--error-color); }
 
 /*=============== BREAKPOINTS ===============*/
 /* For large devices */
@@ -176,7 +214,6 @@ img {
     margin-left: var(--mb-1-5);
     margin-right: var(--mb-1-5);
   }
-}
 
   .button {
     padding: 1rem 1.75rem;
@@ -186,7 +223,7 @@ img {
     width: 22px;
     height: 22px;
   }
-
+}
 
 /* For medium devices */
 @media screen and (max-width: 768px) {
@@ -203,17 +240,14 @@ img {
   }
 }
 
-@media screen and (max-width: 576px) {
-}
-
 /* For small devices */
 @media screen and (max-width: 350px) {
   :root {
     --big-font-size: 2.25rem;
   }
+
   .container {
-    margin-left: var(--mb-1-5);
-    margin-right: var(--mb-1-5);
+    margin-left: var(--mb-1);
+    margin-right: var(--mb-1);
   }
-  
 }

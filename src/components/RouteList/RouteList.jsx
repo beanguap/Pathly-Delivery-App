@@ -7,18 +7,20 @@ function RouteList({ routes, currentLocation, onDelete }) {
   const [swipedRouteId, setSwipedRouteId] = useState(null);
   const [initialX, setInitialX] = useState(null);
   const [deletingRouteId, setDeletingRouteId] = useState(null);
+  // Add state to manage routes locally
+  const [localRoutes, setLocalRoutes] = useState(routes);
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lon2 - lon1, 2));
   };
 
   const sortedRoutes = useMemo(() => {
-    return [...routes].sort((a, b) => {
+    return [...localRoutes].sort((a, b) => {
       const distanceA = calculateDistance(currentLocation[0], currentLocation[1], a.latitude, a.longitude);
       const distanceB = calculateDistance(currentLocation[0], currentLocation[1], b.latitude, b.longitude);
       return sortOrder === 'asc' ? distanceA - distanceB : distanceB - distanceA;
     });
-  }, [routes, currentLocation, sortOrder]);
+  }, [localRoutes, currentLocation, sortOrder]);
 
   const toggleSortOrder = () => {
     setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
@@ -55,11 +57,14 @@ function RouteList({ routes, currentLocation, onDelete }) {
     }
   }, [initialX, swipedRouteId]);
 
+  // Update handleDelete to remove the route immediately after animation
   const handleDelete = useCallback((routeId) => {
     setDeletingRouteId(routeId);
     setTimeout(() => {
-      onDelete(routeId);
+      setLocalRoutes(prevRoutes => prevRoutes.filter(route => route.id !== routeId));
       setDeletingRouteId(null);
+      // Call onDelete to notify the parent component
+      onDelete(routeId);
     }, 1000); // Adjust this timeout to match your CSS animation duration
   }, [onDelete]);
 
